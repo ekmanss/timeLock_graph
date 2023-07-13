@@ -1,0 +1,50 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: timeLocker
+    network: zksync-era
+    source:
+      address: "0x6a88Db7546646b2Ce6Cf7D69A909f75A95d60095"
+      abi: timeLockerAbi
+      startBlock: 8372305
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Deposit
+        - Withdraw
+        - Supply
+      abis:
+        - name: timeLockerAbi
+          file: ./abis/TimelockSp.json
+      eventHandlers:
+        - event: ApproveNewOwner(address,address)
+          handler: handleApproveNewOwner
+        - event: ClearAction(bytes32)
+          handler: handleClearAction
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: ProceedAction(bytes32)
+          handler: handleProceedAction
+        - event: SignalPendingAction(bytes32)
+          handler: handleSignalPendingAction
+        - event: SignalSetAdd(address,address[])
+          handler: handleSignalSetAdd
+        - event: SignalSetGov(address,address)
+          handler: handleSignalSetGov
+        - event: SignalSetHandler(address,address)
+          handler: handleSignalSetHandler
+        - event: SignalSetManager(address,address)
+          handler: handleSignalSetManager
+        - event: SignalWithdrawETH(address,address)
+          handler: handleSignalWithdrawETH
+        - event: SignalWithdrawToken(address,address,address,uint256,bytes32)
+          handler: handleSignalWithdrawToken
+        - event: TargetOperation(address,address)
+          handler: handleTargetOperation
+        - event: UpdateApprover(uint8,address,address)
+          handler: handleUpdateApprover
+      file: ./src/timeLocker.ts
